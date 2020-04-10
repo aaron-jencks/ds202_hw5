@@ -2,11 +2,13 @@
 title: DS202 Homework 5
 author: Aaron Jencks
 date: 4/10/2020
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
+library(ggrepel)
 library(dplyr)
 library(lubridate)
 library(tidyr)
@@ -29,8 +31,6 @@ This dataset https://data.iowa.gov/Sales-Distribution/2019-Iowa-Liquor-Sales/38x
 
 	```{r}
 	liquor = readr::read_csv('./2019_Iowa_Liquor_Sales.csv')
-	str(liquor)
-	head(liquor)
 	```
   
 2. Data cleaning: 
@@ -39,7 +39,16 @@ This dataset https://data.iowa.gov/Sales-Distribution/2019-Iowa-Liquor-Sales/38x
   c. extract year, month and day from the variable `Date` as separate columns.
 
 	```{r}
-	names(liquor) = str_replace_all(names(liquor), c(" " = ".", "," = "", "/" = "."))
+	names(liquor) = str_replace_all(names(liquor), c(" " = ".", "," = "", "/" = ".", "\\(" = "", "\\)" = ""))
+	
+	# Cleans up the duplicate categories
+	liquor = liquor %>% mutate(Category.Name = str_replace_all(Category.Name, c(
+		"Temporary &  Specialty Packages" = "Temporary & Specialty Packages", 
+		"Vodkas" = "Vodka", 
+		"Spirit Specialty" = "Spirits Specialty", 
+		"Liqueurs" = "Liqueur",
+		"/RTD" = "/ RTD")))
+		
 
 	# Part b.
 	liquor = liquor %>%
@@ -62,7 +71,7 @@ This dataset https://data.iowa.gov/Sales-Distribution/2019-Iowa-Liquor-Sales/38x
 		separate(Lat.Long, c("Lat", "Long"), ",") %>%
 		mutate(Lat = as.numeric(str_extract(Lat, "-?[:digit:]+\\.?[:digit:]*")),
 			Long = as.numeric(str_extract(Long, "-?[:digit:]+\\.?[:digit:]*")))
-
+			
 	str(loc_data)
 	```
 
@@ -70,12 +79,38 @@ This dataset https://data.iowa.gov/Sales-Distribution/2019-Iowa-Liquor-Sales/38x
   a. Plot a scatterplot of lat and long of store locations. 
   b. Provide a visual breakdown of the liquor category (by `Category Name`). Include volume sold in the breakdown.
   
-	```{r}
-	# Part a.
-	ggplot(loc_data, aes(x = Long, y = Lat)) + geom_point()
-	```
+```{r}
+# Part a.
+# Cleans up the store names a bit
+loc_data = loc_data %>%
+	mutate(Store.Name = str_replace_all(Store.Name, c(
+		"AJ'S LIQUOR.+" = "AJ's Liquor", "AJ's Liquor.+" = "AJ's Liquor",
+		"Casey's General Store.+" = "Casey's General Store", 
+		"Fareway Stores.+" = "Fareway Stores", 
+		"Kum & Go.+" = "Kum & Go",
+		"Hy-Vee.+" = "Hy-Vee", 
+		"Wal-Mart.+" = "Wal-Mart", 
+		"CVS Pharmacy.+" = "CVS Pharmacy", 
+		"Kwik Stop.+" = "Kwik Stop", 
+		"Target Store.+" = "Target", 
+		" / Ames" = "", 
+		" - Ames" = "", 
+		"#[:digit:]+" = "", 
+		"[:digit:]+" = "")))
+		
+ggplot(loc_data, aes(x = Long, y = Lat, color=Store.Name)) + geom_point()
+
+# Part b.
+loc_data %>% filter(!is.na(Category.Name)) %>% ggplot(aes(x = Category.Name, y = Volume.Sold.Liters, fill=Store.Name)) + geom_bar(stat="identity") + coord_flip()
+```
   
 4. Find the daily sales liquor sales in Ames in 2019. Summarize the number of sales, volume of liquor sold, and amount of money spent.
+
+```{r}
+sales_data = liquor %>% group_by(Day) %>% summarize(sales = n(!is.na(Sale.Dollars)), gross = sum(Sale.Dollars), volume = sum(Volume.Sold.Liters))
+str(sales_data)
+```
+
 5. Plot volume sold by day (use a scatterplot of volume by day and facet by month). Discover trends with the help of `geom_smooth`. Describe any patterns.
 6. Find the dates for ISU football home games in Fall 2019. Can you see a pattern? 
 
