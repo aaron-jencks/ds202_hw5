@@ -2,12 +2,15 @@
 title: DS202 Homework 5
 author: Aaron Jencks
 date: 4/10/2020
-output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-liquor = readr::read_csv('./2019_Iowa_Liquor_Sales.csv')
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(tidyr)
+library(stringr)
 ```
 
 ## Liquor Sales in Iowa
@@ -23,14 +26,55 @@ This dataset https://data.iowa.gov/Sales-Distribution/2019-Iowa-Liquor-Sales/38x
   c. Add a New Filter Condition: City is Ames.
   d. Export -- CSV -- Download
   e. Use `readr::read_csv` to import.
+
+	```{r}
+	liquor = readr::read_csv('./2019_Iowa_Liquor_Sales.csv')
+	str(liquor)
+	head(liquor)
+	```
   
 2. Data cleaning: 
   a. extract geographic latitude and longitude from the variable `Store Location`
   b. make sure the variables are in the correct type, by converting incorrect variable types.
   c. extract year, month and day from the variable `Date` as separate columns.
+
+	```{r}
+	names(liquor) = str_replace_all(names(liquor), c(" " = ".", "," = "", "/" = "."))
+
+	# Part b.
+	liquor = liquor %>%
+		mutate(Date = mdy(Date), 
+			Category.Name = factor(Category.Name, sort(unique(Category.Name))), 
+			Vendor.Name = factor(Vendor.Name, sort(unique(Vendor.Name))), 
+			Item.Description = factor(Item.Description, sort(unique(Item.Description))),
+			Pack = factor(Pack, sort(unique(Pack))),
+			Vendor.Number = as.numeric(Vendor.Number))
+
+	# Part c.
+	liquor = liquor %>% 
+		separate(Date, c("Month", "Day", "Year"), "-") %>%
+		mutate(Month = as.numeric(Month), Day = as.numeric(Day), Year = as.numeric(Year))
+	
+	# Part a.
+	loc_data =  liquor %>% 
+		filter(!is.na(Store.Location)) %>%
+		mutate(Lat.Long = str_extract_all(Store.Location, "-?[:digit:]+\\.?[:digit:]*")) %>%
+		separate(Lat.Long, c("Lat", "Long"), ",") %>%
+		mutate(Lat = as.numeric(str_extract(Lat, "-?[:digit:]+\\.?[:digit:]*")),
+			Long = as.numeric(str_extract(Long, "-?[:digit:]+\\.?[:digit:]*")))
+
+	str(loc_data)
+	```
+
 3. First overview:
   a. Plot a scatterplot of lat and long of store locations. 
   b. Provide a visual breakdown of the liquor category (by `Category Name`). Include volume sold in the breakdown.
+  
+	```{r}
+	# Part a.
+	ggplot(loc_data, aes(x = Long, y = Lat)) + geom_point()
+	```
+  
 4. Find the daily sales liquor sales in Ames in 2019. Summarize the number of sales, volume of liquor sold, and amount of money spent.
 5. Plot volume sold by day (use a scatterplot of volume by day and facet by month). Discover trends with the help of `geom_smooth`. Describe any patterns.
 6. Find the dates for ISU football home games in Fall 2019. Can you see a pattern? 

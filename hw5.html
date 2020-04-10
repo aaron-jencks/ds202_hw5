@@ -383,6 +383,112 @@ summary {
 <li>Export – CSV – Download</li>
 <li>Use <code>readr::read_csv</code> to import.</li>
 </ol>
+<pre><code>```r
+liquor = readr::read_csv('./2019_Iowa_Liquor_Sales.csv')
+```
+
+```
+## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   `Invoice/Item Number` = col_character(),
+##   Date = col_character(),
+##   `Store Name` = col_character(),
+##   Address = col_character(),
+##   City = col_character(),
+##   `Store Location` = col_character(),
+##   County = col_character(),
+##   `Category Name` = col_character(),
+##   `Vendor Number` = col_character(),
+##   `Vendor Name` = col_character(),
+##   `Item Description` = col_character()
+## )
+```
+
+```
+## See spec(...) for full column specifications.
+```
+
+```r
+str(liquor)
+```
+
+```
+## tibble [63,103 × 24] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ Invoice/Item Number  : chr [1:63103] &quot;INV-16712000040&quot; &quot;INV-16712000012&quot; &quot;INV-16712000070&quot; &quot;INV-16712000009&quot; ...
+##  $ Date                 : chr [1:63103] &quot;01/03/2019&quot; &quot;01/03/2019&quot; &quot;01/03/2019&quot; &quot;01/03/2019&quot; ...
+##  $ Store Number         : num [1:63103] 2500 2500 2500 2500 2500 ...
+##  $ Store Name           : chr [1:63103] &quot;Hy-Vee Food Store #1 / Ames&quot; &quot;Hy-Vee Food Store #1 / Ames&quot; &quot;Hy-Vee Food Store #1 / Ames&quot; &quot;Hy-Vee Food Store #1 / Ames&quot; ...
+##  $ Address              : chr [1:63103] &quot;3800 W Lincoln Way&quot; &quot;3800 W Lincoln Way&quot; &quot;3800 W Lincoln Way&quot; &quot;3800 W Lincoln Way&quot; ...
+##  $ City                 : chr [1:63103] &quot;Ames&quot; &quot;Ames&quot; &quot;Ames&quot; &quot;Ames&quot; ...
+##  $ Zip Code             : num [1:63103] 50010 50010 50010 50010 50010 ...
+##  $ Store Location       : chr [1:63103] NA NA NA NA ...
+##  $ County Number        : num [1:63103] 85 85 85 85 85 85 85 85 85 85 ...
+##  $ County               : chr [1:63103] &quot;STORY&quot; &quot;STORY&quot; &quot;STORY&quot; &quot;STORY&quot; ...
+##  $ Category             : num [1:63103] 1042100 1012100 1031100 1012100 1081400 ...
+##  $ Category Name        : chr [1:63103] &quot;Imported Dry Gins&quot; &quot;Canadian Whiskies&quot; &quot;American Vodkas&quot; &quot;Canadian Whiskies&quot; ...
+##  $ Vendor Number        : chr [1:63103] &quot;260&quot; &quot;260&quot; &quot;055&quot; &quot;260&quot; ...
+##  $ Vendor Name          : chr [1:63103] &quot;DIAGEO AMERICAS&quot; &quot;DIAGEO AMERICAS&quot; &quot;SAZERAC NORTH AMERICA&quot; &quot;DIAGEO AMERICAS&quot; ...
+##  $ Item Number          : num [1:63103] 28867 11294 37936 10805 82867 ...
+##  $ Item Description     : chr [1:63103] &quot;Tanqueray Gin&quot; &quot;Crown Royal&quot; &quot;Skol Vodka&quot; &quot;Crown Royal Regal Apple&quot; ...
+##  $ Pack                 : num [1:63103] 12 24 12 24 12 12 6 6 12 12 ...
+##  $ Bottle Volume (ml)   : num [1:63103] 1000 375 750 375 1000 750 1750 1750 750 375 ...
+##  $ State Bottle Cost    : num [1:63103] 15.5 8 3.64 8 7.87 ...
+##  $ State Bottle Retail  : num [1:63103] 23.25 12 5.46 12 11.81 ...
+##  $ Bottles Sold         : num [1:63103] 12 4 12 4 12 3 6 12 2 4 ...
+##  $ Sale (Dollars)       : num [1:63103] 279 48 65.5 48 141.7 ...
+##  $ Volume Sold (Liters) : num [1:63103] 12 1.5 9 1.5 12 2.25 10.5 21 1.5 1.5 ...
+##  $ Volume Sold (Gallons): num [1:63103] 3.17 0.39 2.37 0.39 3.17 0.59 2.77 5.54 0.39 0.39 ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   `Invoice/Item Number` = col_character(),
+##   ..   Date = col_character(),
+##   ..   `Store Number` = col_double(),
+##   ..   `Store Name` = col_character(),
+##   ..   Address = col_character(),
+##   ..   City = col_character(),
+##   ..   `Zip Code` = col_double(),
+##   ..   `Store Location` = col_character(),
+##   ..   `County Number` = col_double(),
+##   ..   County = col_character(),
+##   ..   Category = col_double(),
+##   ..   `Category Name` = col_character(),
+##   ..   `Vendor Number` = col_character(),
+##   ..   `Vendor Name` = col_character(),
+##   ..   `Item Number` = col_double(),
+##   ..   `Item Description` = col_character(),
+##   ..   Pack = col_double(),
+##   ..   `Bottle Volume (ml)` = col_double(),
+##   ..   `State Bottle Cost` = col_double(),
+##   ..   `State Bottle Retail` = col_double(),
+##   ..   `Bottles Sold` = col_double(),
+##   ..   `Sale (Dollars)` = col_double(),
+##   ..   `Volume Sold (Liters)` = col_double(),
+##   ..   `Volume Sold (Gallons)` = col_double()
+##   .. )
+```
+
+```r
+head(liquor)
+```
+
+```
+## # A tibble: 6 x 24
+##   `Invoice/Item N… Date  `Store Number` `Store Name` Address City  `Zip Code`
+##   &lt;chr&gt;            &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt;
+## 1 INV-16712000040  01/0…           2500 Hy-Vee Food… 3800 W… Ames       50010
+## 2 INV-16712000012  01/0…           2500 Hy-Vee Food… 3800 W… Ames       50010
+## 3 INV-16712000070  01/0…           2500 Hy-Vee Food… 3800 W… Ames       50010
+## 4 INV-16712000009  01/0…           2500 Hy-Vee Food… 3800 W… Ames       50010
+## 5 INV-16712000160  01/0…           2500 Hy-Vee Food… 3800 W… Ames       50010
+## 6 INV-16712000119  01/0…           2500 Hy-Vee Food… 3800 W… Ames       50010
+## # … with 17 more variables: `Store Location` &lt;chr&gt;, `County Number` &lt;dbl&gt;,
+## #   County &lt;chr&gt;, Category &lt;dbl&gt;, `Category Name` &lt;chr&gt;, `Vendor Number` &lt;chr&gt;,
+## #   `Vendor Name` &lt;chr&gt;, `Item Number` &lt;dbl&gt;, `Item Description` &lt;chr&gt;,
+## #   Pack &lt;dbl&gt;, `Bottle Volume (ml)` &lt;dbl&gt;, `State Bottle Cost` &lt;dbl&gt;, `State
+## #   Bottle Retail` &lt;dbl&gt;, `Bottles Sold` &lt;dbl&gt;, `Sale (Dollars)` &lt;dbl&gt;, `Volume
+## #   Sold (Liters)` &lt;dbl&gt;, `Volume Sold (Gallons)` &lt;dbl&gt;
+```</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Data cleaning:</li>
 </ol>
@@ -391,6 +497,65 @@ summary {
 <li>make sure the variables are in the correct type, by converting incorrect variable types.</li>
 <li>extract year, month and day from the variable <code>Date</code> as separate columns.</li>
 </ol>
+<pre><code>```r
+names(liquor) = str_replace_all(names(liquor), c(&quot; &quot; = &quot;.&quot;, &quot;,&quot; = &quot;&quot;, &quot;/&quot; = &quot;.&quot;))
+
+# Part b.
+liquor = liquor %&gt;%
+    mutate(Date = mdy(Date), 
+        Category.Name = factor(Category.Name, sort(unique(Category.Name))), 
+        Vendor.Name = factor(Vendor.Name, sort(unique(Vendor.Name))), 
+        Item.Description = factor(Item.Description, sort(unique(Item.Description))),
+        Pack = factor(Pack, sort(unique(Pack))),
+        Vendor.Number = as.numeric(Vendor.Number))
+
+# Part c.
+liquor = liquor %&gt;% 
+    separate(Date, c(&quot;Month&quot;, &quot;Day&quot;, &quot;Year&quot;), &quot;-&quot;) %&gt;%
+    mutate(Month = as.numeric(Month), Day = as.numeric(Day), Year = as.numeric(Year))
+
+# Part a.
+loc_data =  liquor %&gt;% 
+    filter(!is.na(Store.Location)) %&gt;%
+    mutate(Lat.Long = str_extract_all(Store.Location, &quot;-?[:digit:]+\\.?[:digit:]*&quot;)) %&gt;%
+    separate(Lat.Long, c(&quot;Lat&quot;, &quot;Long&quot;), &quot;,&quot;) %&gt;%
+    mutate(Lat = as.numeric(str_extract(Lat, &quot;-?[:digit:]+\\.?[:digit:]*&quot;)),
+        Long = as.numeric(str_extract(Long, &quot;-?[:digit:]+\\.?[:digit:]*&quot;)))
+
+str(loc_data)
+```
+
+```
+## tibble [48,250 × 28] (S3: tbl_df/tbl/data.frame)
+##  $ Invoice.Item.Number  : chr [1:48250] &quot;INV-16835000019&quot; &quot;INV-16886300007&quot; &quot;INV-17377700173&quot; &quot;INV-17376600028&quot; ...
+##  $ Month                : num [1:48250] 2019 2019 2019 2019 2019 ...
+##  $ Day                  : num [1:48250] 1 1 2 2 2 2 2 2 2 2 ...
+##  $ Year                 : num [1:48250] 9 11 6 6 6 13 13 13 13 27 ...
+##  $ Store.Number         : num [1:48250] 4509 5187 4129 3973 2501 ...
+##  $ Store.Name           : chr [1:48250] &quot;AJ'S LIQUOR II&quot; &quot;Kwik Stop Liquor &amp; Groceries Ames&quot; &quot;Cyclone Liquors&quot; &quot;MMDG SPIRITS / Ames&quot; ...
+##  $ Address              : chr [1:48250] &quot;2515 Chamberlain&quot; &quot;125 6th ST&quot; &quot;626 Lincoln Way&quot; &quot;126A Welch Ave&quot; ...
+##  $ City                 : chr [1:48250] &quot;Ames&quot; &quot;Ames&quot; &quot;Ames&quot; &quot;Ames&quot; ...
+##  $ Zip.Code             : num [1:48250] 50010 50010 50010 50014 50010 ...
+##  $ Store.Location       : chr [1:48250] &quot;POINT (-93.650838 42.021461)&quot; &quot;POINT (-93.611773 42.026938)&quot; &quot;POINT (-93.618911 42.022854)&quot; &quot;POINT (-93.650131 42.021789)&quot; ...
+##  $ County.Number        : num [1:48250] 85 85 85 85 85 85 85 85 85 85 ...
+##  $ County               : chr [1:48250] &quot;STORY&quot; &quot;STORY&quot; &quot;STORY&quot; &quot;STORY&quot; ...
+##  $ Category             : num [1:48250] 1031200 1032100 1081400 1081300 1081200 ...
+##  $ Category.Name        : Factor w/ 51 levels &quot;100% Agave Tequila&quot;,..: 8 33 9 4 20 24 33 3 7 12 ...
+##  $ Vendor.Number        : num [1:48250] 259 35 65 434 216 420 115 434 434 461 ...
+##  $ Vendor.Name          : Factor w/ 129 levels &quot;3 BADGE CORPORATION&quot;,..: 48 6 59 70 100 79 22 70 70 107 ...
+##  $ Item.Number          : num [1:48250] 36606 34359 82787 76487 80447 ...
+##  $ Item.Description     : Factor w/ 2124 levels &quot;1800 Anejo&quot;,&quot;1800 Coconut&quot;,..: 593 920 607 1531 1717 1023 1942 1536 371 1793 ...
+##  $ Pack                 : Factor w/ 18 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,..: 10 10 10 10 6 15 6 10 6 10 ...
+##  $ Bottle.Volume.(ml)   : num [1:48250] 750 200 1000 1000 750 200 1750 750 1750 750 ...
+##  $ State.Bottle.Cost    : num [1:48250] 9 5 7.87 4.05 10 6.24 13 5.48 7.17 9.01 ...
+##  $ State.Bottle.Retail  : num [1:48250] 13.5 7.5 11.81 6.08 15 ...
+##  $ Bottles.Sold         : num [1:48250] 2 12 1 7 6 3 6 2 6 12 ...
+##  $ Sale.(Dollars)       : num [1:48250] 27 90 11.8 42.6 90 ...
+##  $ Volume.Sold.(Liters) : num [1:48250] 1.5 2.4 1 7 4.5 0.6 10.5 1.5 10.5 9 ...
+##  $ Volume.Sold.(Gallons): num [1:48250] 0.39 0.63 0.26 1.84 1.18 0.15 2.77 0.39 2.77 2.37 ...
+##  $ Lat                  : num [1:48250] -93.7 -93.6 -93.6 -93.7 -93.6 ...
+##  $ Long                 : num [1:48250] 42 42 42 42 42 ...
+```</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>First overview:</li>
 </ol>
@@ -398,6 +563,12 @@ summary {
 <li>Plot a scatterplot of lat and long of store locations.</li>
 <li>Provide a visual breakdown of the liquor category (by <code>Category Name</code>). Include volume sold in the breakdown.</li>
 </ol>
+<pre><code>```r
+# Part a.
+ggplot(loc_data, aes(x = Long, y = Lat)) + geom_point()
+```
+
+&lt;img src=&quot;hw5_files/figure-html/unnamed-chunk-3-1.png&quot; width=&quot;672&quot; /&gt;</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li>Find the daily sales liquor sales in Ames in 2019. Summarize the number of sales, volume of liquor sold, and amount of money spent.</li>
 <li>Plot volume sold by day (use a scatterplot of volume by day and facet by month). Discover trends with the help of <code>geom_smooth</code>. Describe any patterns.</li>
