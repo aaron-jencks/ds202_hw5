@@ -1,5 +1,13 @@
+---
+title: DS202 Homework 5
+author: Aaron Jencks
+date: 4/10/2020
+output: html_document
+---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+liquor = readr::read_csv('./2019_Iowa_Liquor_Sales.csv')
 ```
 
 ## Liquor Sales in Iowa
