@@ -31,6 +31,7 @@ This dataset https://data.iowa.gov/Sales-Distribution/2019-Iowa-Liquor-Sales/38x
 
 	```{r}
 	liquor = readr::read_csv('./2019_Iowa_Liquor_Sales.csv')
+	# str(liquor)
 	```
   
 2. Data cleaning: 
@@ -52,7 +53,7 @@ This dataset https://data.iowa.gov/Sales-Distribution/2019-Iowa-Liquor-Sales/38x
 
 	# Part b.
 	liquor = liquor %>%
-		mutate(Date = mdy(Date), 
+		mutate(Date = mdy(Date), str_date = Date, doy = yday(Date), 
 			Category.Name = factor(Category.Name, sort(unique(Category.Name))), 
 			Vendor.Name = factor(Vendor.Name, sort(unique(Vendor.Name))), 
 			Item.Description = factor(Item.Description, sort(unique(Item.Description))),
@@ -61,7 +62,7 @@ This dataset https://data.iowa.gov/Sales-Distribution/2019-Iowa-Liquor-Sales/38x
 
 	# Part c.
 	liquor = liquor %>% 
-		separate(Date, c("Month", "Day", "Year"), "-") %>%
+		separate(Date, c("Year", "Month", "Day"), "-") %>%
 		mutate(Month = as.numeric(Month), Day = as.numeric(Day), Year = as.numeric(Year))
 	
 	# Part a.
@@ -72,7 +73,7 @@ This dataset https://data.iowa.gov/Sales-Distribution/2019-Iowa-Liquor-Sales/38x
 		mutate(Lat = as.numeric(str_extract(Lat, "-?[:digit:]+\\.?[:digit:]*")),
 			Long = as.numeric(str_extract(Long, "-?[:digit:]+\\.?[:digit:]*")))
 			
-	str(loc_data)
+	# str(loc_data)
 	```
 
 3. First overview:
@@ -107,11 +108,33 @@ loc_data %>% filter(!is.na(Category.Name)) %>% ggplot(aes(x = Category.Name, y =
 4. Find the daily sales liquor sales in Ames in 2019. Summarize the number of sales, volume of liquor sold, and amount of money spent.
 
 ```{r}
-sales_data = liquor %>% group_by(Day) %>% summarize(sales = n(!is.na(Sale.Dollars)), gross = sum(Sale.Dollars), volume = sum(Volume.Sold.Liters))
+sales_df = liquor %>% group_by(doy)  # %>% filter(!is.na(Sale.Dollars))
+sales_data = sales_df %>% summarize(sales = n(), gross = sum(Sale.Dollars), volume = sum(Volume.Sold.Liters))
 str(sales_data)
 ```
 
 5. Plot volume sold by day (use a scatterplot of volume by day and facet by month). Discover trends with the help of `geom_smooth`. Describe any patterns.
+
+```{r}
+sales_df = sales_df %>% group_by(doy) %>% mutate(Daily.Volume.Liters = sum(Volume.Sold.Liters)) %>% ungroup()
+# str(sales_df)
+ggplot(sales_df, aes(x = Day, y = Daily.Volume.Liters)) + geom_point() + facet_wrap(~Month) + geom_smooth() + labs(title = "Daily Liquor Volume sold by month")
+```
+
+The sale of alcohol is greatest on the weekends, that's found in January and June especially, there is a spike right around when school starts, and when it gets done, other than that, everything kind of stays the same all the time, just crests on the weekends and troughs on Wednesdays.
+
 6. Find the dates for ISU football home games in Fall 2019. Can you see a pattern? 
+
+```{r}
+game_dates = mdy(c("8/31/2019", "9/14/2019", "9/21/2019", 
+	"10/5/2019", "10/26/2019",
+	"11/16/2019", "11/23/2019", "11/30/2019")) %>% str_replace_all(c("/" = "-"))
+# str(game_dates)
+sales_df = sales_df %>% mutate(ISU.Home = str_date %in% game_dates)
+ggplot(sales_df, aes(x = Day, y = Daily.Volume.Liters, color=ISU.Home)) + geom_point() + facet_wrap(~Month) + labs(title = "Daily Liquor Volume sold by month")
+```
+
+I'm gonna be honest with you, I don't really see the pattern here other than that all of the liquor stores are closed on game days and that more liquor is sold during football season, than in the summer.
+
 
 Note: your submission is supposed to be fully reproducible, i.e. the TA and I will 'knit' your submission in RStudio. 
